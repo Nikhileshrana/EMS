@@ -1,0 +1,27 @@
+{
+  "name": "ems-mobile",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Capacitor native shell for EMS (loads the Next.js app via CAPACITOR_SERVER_URL)",
+  "scripts": {
+    "sync": "cap sync",
+    "open:ios": "cap open ios",
+    "open:android": "cap open android",
+    "run:ios": "cap run ios",
+    "run:android": "cap run android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "dotenv": "16.4.7",
+    "typescript": "6.0.3"
+  }
+}

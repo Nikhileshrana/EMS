@@ -15,9 +15,22 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "bun run test:int && bun run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "cap:sync": "bun run --cwd mobile sync",
+    "cap:ios": "bun run --cwd mobile open:ios",
+    "cap:android": "bun run --cwd mobile open:android",
+    "cap:run:ios": "bun run --cwd mobile run:ios",
+    "cap:run:android": "bun run --cwd mobile run:android"
   },
+  "workspaces": [
+    "mobile"
+  ],
   "dependencies": {
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "@livekit/components-react": "^2.9.24",
     "@livekit/components-styles": "^1.2.0",
     "@payloadcms/db-mongodb": "4.0.0-canary.37",

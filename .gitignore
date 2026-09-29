@@ -48,3 +48,17 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Capacitor / native (under mobile/)
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/local.properties
+mobile/android/captures/
+mobile/android/.idea/
+mobile/ios/App/Pods/
+mobile/ios/App/Podfile.lock
+mobile/ios/DerivedData/
+mobile/ios/App/App/public/
+*.xcuserstate
+*.xcuserdata/
