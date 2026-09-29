@@ -1,67 +1,80 @@
-# Payload Blank Template
+# EMS
 
-This template comes configured with the bare minimum to get started on anything you need.
+Education Management System — classes, live sessions, attendance, and study materials.
 
-## Quick start
+![EMS Admin Dashboard](./public/hero.png)
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+**Stack:** Next.js 16 · Payload CMS 4 · MongoDB · LiveKit · Vercel Blob · Capacitor
 
-## Quick Start - local setup
+## Features
 
-To spin up this template locally, follow these steps:
+- **Classes** — enroll students, assign teachers
+- **Live sessions** — LiveKit video classrooms with recordings
+- **Attendance** — tracked from LiveKit webhooks
+- **Study materials** — media library with folders & tags
+- **Mobile** — iOS / Android shell via Capacitor
 
-### Clone
+## Setup
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+```bash
+cp .env.example .env
+bun install
+bun dev
+```
 
-### Development
+Open [http://localhost:3000](http://localhost:3000) → create the first admin user.
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URL` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+### Env
 
-3. `bun install && bun dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+| Variable | Required | Notes |
+|---|---|---|
+| `DATABASE_URL` | yes | MongoDB connection string |
+| `DB_NAME` | yes | Database name |
+| `PAYLOAD_SECRET` | yes | Auth secret |
+| `BLOB_READ_WRITE_TOKEN` | yes | Vercel Blob uploads |
+| `LIVEKIT_API_KEY` | yes | Live sessions |
+| `LIVEKIT_API_SECRET` | yes | Live sessions |
+| `LIVEKIT_URL` | yes | e.g. `wss://….livekit.cloud` |
+| `CAPACITOR_SERVER_URL` | mobile only | App URL the native shell loads |
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+After deploy, point the LiveKit webhook to:
 
-#### Docker (Optional)
+```
+https://YOUR_DOMAIN/api/livekit/webhook
+```
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+### Docker (optional)
 
-To do so, follow these steps:
+```bash
+# set MONGODB_URL=mongodb://127.0.0.1/<dbname> in .env
+docker compose up -d
+bun install && bun dev
+```
 
-- Modify the `MONGODB_URL` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URL` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+## Scripts
 
-## How it works
+| Command | What it does |
+|---|---|
+| `bun dev` | Dev server |
+| `bun build` / `bun start` | Production |
+| `bun run generate:types` | Payload types |
+| `bun run generate:importmap` | Admin import map |
+| `bun test` | Unit + e2e |
+| `bun run cap:ios` / `cap:android` | Open native projects |
+| `bun run cap:sync` | Sync Capacitor |
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+## Collections
 
-### Collections
+| Group | Collections |
+|---|---|
+| Access | Users |
+| Education | Classes, ClassTeachers, Enrollments, Materials, Sessions, Attendance, RecordingParts |
+| Library | Media, Folders, Tags |
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+## Mobile
 
-- #### Users (Authentication)
-
-  Users are auth-enabled collections that have access to the admin panel.
-
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
-
-- #### Media
-
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
-
-### Docker
-
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
-
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
-
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
-
-## Questions
-
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+```bash
+# CAPACITOR_SERVER_URL in .env → your running web app
+bun run cap:sync
+bun run cap:ios      # or cap:android
+```
