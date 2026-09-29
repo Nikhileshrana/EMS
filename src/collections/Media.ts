@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { createFolderField, createTagField } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { readStudyFiles } from '../access/education'
 import { hasAnyRole, staffPanel } from '../access/roles'
 
@@ -10,7 +11,13 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'Library',
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher']),
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: staffPanel,
     create: staffPanel,

@@ -5,7 +5,7 @@ import { hasAnyRole, isAdmin, isTeacher } from './roles'
 
 const memberRoles = ['admin', 'teacher', 'student'] as const
 
-async function enrolledClassIDs(req: PayloadRequest, userID: string): Promise<string[]> {
+export async function enrolledClassIDs(req: PayloadRequest, userID: string): Promise<string[]> {
   const enrollments = await req.payload.find({
     collection: 'enrollments',
     depth: 0,

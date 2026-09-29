@@ -1,5 +1,6 @@
 import { ValidationError, type CollectionConfig, type Where } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { relationID } from '../access/ids'
 import { createClass, manageClassRecords, readMaterials } from '../access/education'
 import { educationPanel, hasAnyRole } from '../access/roles'
@@ -15,7 +16,13 @@ export const Materials: CollectionConfig = {
     group: 'Education',
     defaultColumns: ['title', 'class', 'source', 'published', 'updatedAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: educationPanel,
     create: createClass,

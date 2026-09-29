@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 
 import { ValidationError, type CollectionConfig } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { relationID } from '../access/ids'
 import { createClass, manageClassRecords, readClassRecords } from '../access/education'
 import { educationPanel, hasAnyRole, isAdmin } from '../access/roles'
@@ -23,16 +24,7 @@ export const Sessions: CollectionConfig = {
       },
       views: {
         edit: {
-          api: {
-            tab: {
-              condition: ({ req }) => isAdmin(req.user),
-            },
-          },
-          versions: {
-            tab: {
-              condition: ({ req }) => isAdmin(req.user),
-            },
-          },
+          ...adminOnlyApiTab,
           recording: {
             path: '/recording',
             Component: '@/components/admin/SessionRecordingView#SessionRecordingView',

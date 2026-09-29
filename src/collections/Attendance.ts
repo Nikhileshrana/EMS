@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { readAttendance } from '../access/education'
 import { adminOnly, educationPanel, hasAnyRole } from '../access/roles'
 import { formatStay, stayFor } from '../lib/attendance'
@@ -15,7 +16,13 @@ export const Attendance: CollectionConfig = {
     group: 'Education',
     defaultColumns: ['name', 'session', 'timeInSession', 'joinedAt', 'leftAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher']),
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: educationPanel,
     create: adminOnly,

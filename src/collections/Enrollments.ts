@@ -1,5 +1,6 @@
 import { ValidationError, type CollectionConfig } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { relationID } from '../access/ids'
 import { createClass, manageClassRecords, readEnrollments } from '../access/education'
 import { educationPanel, isAdmin } from '../access/roles'
@@ -15,7 +16,13 @@ export const Enrollments: CollectionConfig = {
     group: 'Education',
     defaultColumns: ['student', 'class', 'status'],
     hidden: true,
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: educationPanel,
     create: createClass,

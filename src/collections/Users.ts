@@ -1,7 +1,9 @@
 import type { CollectionConfig, Where } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
+import { enrolledClassIDs } from '../access/education'
 import { relationID } from '../access/ids'
-import { adminOnly, adminPanel, isAdmin, roleOptions } from '../access/roles'
+import { adminOnly, adminPanel, isAdmin, isTeacher, roleOptions } from '../access/roles'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -10,8 +12,14 @@ export const Users: CollectionConfig = {
     defaultColumns: ['name', 'email', 'roles'],
     group: 'Access',
     hidden: ({ user }) => !isAdmin(user),
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
   auth: true,
+  versions: false,
   access: {
     admin: adminPanel,
     create: async ({ req }) => {
@@ -23,19 +31,61 @@ export const Users: CollectionConfig = {
       return existing.totalDocs === 0
     },
     delete: adminOnly,
-    read: ({ req: { user } }) => {
+    read: async ({ req }) => {
+      const user = req.user
       if (!user) return false
       if (isAdmin(user)) return true
-      if (user.roles?.includes('teacher')) {
+
+      if (isTeacher(user)) {
         const where: Where = {
           or: [
             { id: { equals: user.id } },
             { roles: { contains: 'student' } },
             { roles: { contains: 'teacher' } },
+            { roles: { contains: 'admin' } },
           ],
         }
         return where
       }
+
+      if (user.roles?.includes('student')) {
+        const classIDs = await enrolledClassIDs(req, String(user.id))
+        if (classIDs.length === 0) return { id: { equals: user.id } }
+
+        const [teachers, classmates] = await Promise.all([
+          req.payload.find({
+            collection: 'class-teachers',
+            depth: 0,
+            limit: 1000,
+            overrideAccess: true,
+            pagination: false,
+            where: { class: { in: classIDs } },
+          }),
+          req.payload.find({
+            collection: 'enrollments',
+            depth: 0,
+            limit: 1000,
+            overrideAccess: true,
+            pagination: false,
+            where: {
+              and: [{ class: { in: classIDs } }, { status: { equals: 'active' } }],
+            },
+          }),
+        ])
+
+        const relatedIDs = new Set<string>([String(user.id)])
+        for (const row of teachers.docs) {
+          const id = relationID(row.teacher)
+          if (id) relatedIDs.add(id)
+        }
+        for (const row of classmates.docs) {
+          const id = relationID(row.student)
+          if (id) relatedIDs.add(id)
+        }
+
+        return { id: { in: [...relatedIDs] } }
+      }
+
       return { id: { equals: user.id } }
     },
     update: ({ req: { user }, id }) => {
@@ -106,5 +156,4 @@ export const Users: CollectionConfig = {
       },
     },
   ],
-  versions: false,
 }

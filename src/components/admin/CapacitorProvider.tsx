@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import { AdminRoleClass } from '@/components/admin/AdminRoleClass'
 import { CapacitorShell } from '@/components/CapacitorShell'
 
 /** Wraps the Payload admin so native shell plugins also run on /admin. */
@@ -9,6 +10,7 @@ export function CapacitorProvider({ children }: { children?: React.ReactNode }) 
   return (
     <>
       <CapacitorShell />
+      <AdminRoleClass />
       {children}
     </>
   )

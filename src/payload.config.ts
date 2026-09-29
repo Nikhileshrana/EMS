@@ -39,6 +39,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     theme: 'dark',
+    dateFormat: 'dd/MM/yyyy',
     importMap: {
       baseDir: path.resolve(dirname),
     },

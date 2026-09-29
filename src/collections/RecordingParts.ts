@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { readAttendance } from '../access/education'
 import { adminOnly, educationPanel } from '../access/roles'
 
@@ -14,7 +15,13 @@ export const RecordingParts: CollectionConfig = {
     group: 'Education',
     defaultColumns: ['part', 'session', 'size', 'updatedAt'],
     hidden: true,
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: educationPanel,
     create: adminOnly,

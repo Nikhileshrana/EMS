@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { hasAnyRole, staffPanel } from '../access/roles'
 
 export const Folders: CollectionConfig = {
@@ -8,7 +9,13 @@ export const Folders: CollectionConfig = {
     useAsTitle: 'name',
     group: 'Library',
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher']),
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: staffPanel,
     create: staffPanel,

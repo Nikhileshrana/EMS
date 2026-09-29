@@ -83,4 +83,65 @@ html.ems-bottom-nav .ems-bottom-tabs {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  /* All collection lists: search + Filters / Group by / Columns / Create New stretch full width */
+  .list-controls__search-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacer-2, 0.5rem);
+  }
+
+  .list-controls__left {
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .list-controls .search-input,
+  .list-controls .search-bar {
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .list-controls__spacer {
+    display: none;
+  }
+
+  .list-controls__actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--spacer-2, 0.5rem);
+  }
+
+  .list-controls__actions > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .list-controls__actions .btn,
+  .list-controls__toggle-where,
+  .list-controls__toggle-sort,
+  .list-controls__toggle-group-by,
+  .list-controls__create-new {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Students: join tables are view-only (Payload still paints Add New / edit despite create:false) */
+html[data-ems-role='student'] .relationship-table__add-new,
+html[data-ems-role='student'] .relationship-table__add-new-polymorphic,
+html[data-ems-role='student'] .drawer-link__doc-drawer-toggler {
+  display: none !important;
+}
+
+/* Students/teachers: never show API / Versions document tabs */
+html[data-ems-role='student'] .doc-tab[href$='/api'],
+html[data-ems-role='student'] .doc-tab[href$='/versions'],
+html[data-ems-role='teacher'] .doc-tab[href$='/api'],
+html[data-ems-role='teacher'] .doc-tab[href$='/versions'] {
+  display: none !important;
 }

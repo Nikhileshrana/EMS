@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminOnlyApiTab } from '../access/adminViews'
 import { relationID } from '../access/ids'
 import { createClass, manageOwnClasses, readClasses } from '../access/education'
 import { educationPanel, hasAnyRole, isAdmin, isTeacher } from '../access/roles'
@@ -15,7 +16,13 @@ export const Classes: CollectionConfig = {
     group: 'Education',
     defaultColumns: ['title', 'status', 'updatedAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
+    components: {
+      views: {
+        edit: adminOnlyApiTab,
+      },
+    },
   },
+  versions: false,
   access: {
     admin: educationPanel,
     create: createClass,
@@ -111,6 +118,7 @@ export const Classes: CollectionConfig = {
         allowCreate: true,
         defaultColumns: ['teacher', 'updatedAt'],
         description: 'Teachers who can run this class.',
+        disableRowTypes: true,
       },
     },
     {
@@ -123,6 +131,7 @@ export const Classes: CollectionConfig = {
         allowCreate: true,
         defaultColumns: ['student', 'status', 'updatedAt'],
         description: 'Students enrolled in this class.',
+        disableRowTypes: true,
       },
     },
     {
