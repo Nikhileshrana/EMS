@@ -1,3 +1,4 @@
+import { JoinClassroomLink as JoinClassroomLink_8346d144f4766be34bc39b662d2591d7 } from '@/components/admin/JoinClassroomLink'
 import { NullField as NullField_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
 import { HierarchyField as HierarchyField_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 import { HierarchyButton as HierarchyButton_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
@@ -14,6 +15,7 @@ import { RecentlyViewedCollectionsField as RecentlyViewedCollectionsField_3817bf
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/components/admin/JoinClassroomLink#JoinClassroomLink": JoinClassroomLink_8346d144f4766be34bc39b662d2591d7,
   "@payloadcms/ui#NullField": NullField_3817bf644402e67bfe6577f60ef982de,
   "@payloadcms/ui/rsc#HierarchyField": HierarchyField_ab83ff7e88da8d3530831f296ec4756a,
   "@payloadcms/ui/rsc#HierarchyButton": HierarchyButton_ab83ff7e88da8d3530831f296ec4756a,

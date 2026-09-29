@@ -1,19 +1,22 @@
+import { Geist } from 'next/font/google'
 import React from 'react'
-import './styles.css'
+
+import '../globals.css'
+
+const geist = Geist({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: 'Education management for classes, study material, and live sessions.',
+  title: 'EMS',
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-
+export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
+    <html className={geist.variable} lang="en">
+      <body className="min-h-dvh font-sans antialiased">{props.children}</body>
     </html>
   )
 }
