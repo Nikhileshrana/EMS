@@ -18,9 +18,11 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
+    "@payloadcms/db-mongodb": "4.0.0-canary.37",
     "@payloadcms/next": "4.0.0-canary.37",
     "@payloadcms/plugin-mcp": "4.0.0-canary.37",
     "@payloadcms/richtext-lexical": "4.0.0-canary.37",
+    "@payloadcms/storage-vercel-blob": "4.0.0-canary.37",
     "@payloadcms/ui": "4.0.0-canary.37",
     "cross-env": "10.1.0",
     "dotenv": "16.4.7",
@@ -29,8 +31,7 @@
     "payload": "4.0.0-canary.37",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "sharp": "0.35.4",
-    "@payloadcms/db-mongodb": "4.0.0-canary.37"
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

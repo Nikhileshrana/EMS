@@ -1,6 +1,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { mcpPlugin } from '@payloadcms/plugin-mcp'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -15,9 +16,14 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const dbName = process.env.DB_NAME
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN
 
 if (!dbName) {
   throw new Error('DB_NAME is required. Every collection is stored in that database.')
+}
+
+if (!blobToken) {
+  throw new Error('BLOB_READ_WRITE_TOKEN is required. Uploads are stored in Vercel Blob.')
 }
 
 export default buildConfig({
@@ -45,5 +51,16 @@ export default buildConfig({
     fallback: true,
     defaultLocale: 'en',
   },
+  storage: [
+    vercelBlobStorage({
+      collections: {
+        media: {
+          prefix: dbName,
+        },
+      },
+      clientUploads: true,
+      token: blobToken,
+    }),
+  ],
   plugins: [mcpPlugin({})],
 })
