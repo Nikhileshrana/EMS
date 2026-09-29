@@ -2,7 +2,8 @@ import { createLocalReq } from 'payload'
 
 import { relationID } from '@/access/ids'
 import { userCanJoinClass } from '@/access/education'
-import { payloadFromHeaders } from '@/lib/livekit'
+import { endLiveSession } from '@/lib/attendance'
+import { closeLiveKitRoom, payloadFromHeaders } from '@/lib/livekit'
 
 type Args = {
   params: Promise<{
@@ -33,15 +34,8 @@ export async function POST(request: Request, { params }: Args) {
     return Response.json({ error: 'Only a teacher or admin can end this session.' }, { status: 403 })
   }
 
-  await payload.update({
-    collection: 'sessions',
-    id: session.id,
-    data: {
-      status: 'ended',
-      endedAt: new Date().toISOString(),
-    },
-    overrideAccess: true,
-  })
+  await endLiveSession(payload, String(session.id))
+  if (session.roomName) await closeLiveKitRoom(session.roomName)
 
   return Response.json({ ok: true })
 }

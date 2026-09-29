@@ -12,6 +12,8 @@ import { Classes } from './collections/Classes'
 import { Enrollments } from './collections/Enrollments'
 import { Materials } from './collections/Materials'
 import { Sessions } from './collections/Sessions'
+import { Attendance } from './collections/Attendance'
+import { RecordingParts } from './collections/RecordingParts'
 import { Media } from './collections/Media'
 import { Folders } from './collections/Folders'
 import { Tags } from './collections/Tags'
@@ -37,7 +39,18 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Classes, Enrollments, Materials, Sessions, Media, Folders, Tags],
+  collections: [
+    Users,
+    Classes,
+    Enrollments,
+    Materials,
+    Sessions,
+    Attendance,
+    RecordingParts,
+    Media,
+    Folders,
+    Tags,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

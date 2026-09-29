@@ -72,6 +72,8 @@ export interface Config {
     enrollments: Enrollment;
     materials: Material;
     sessions: Session;
+    attendance: Attendance;
+    'recording-parts': RecordingPart;
     media: Media;
     folders: Folder;
     tags: Tag;
@@ -80,13 +82,19 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    sessions: {
+      attendance: 'attendance';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     classes: ClassesSelect<false> | ClassesSelect<true>;
     enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     materials: MaterialsSelect<false> | MaterialsSelect<true>;
     sessions: SessionsSelect<false> | SessionsSelect<true>;
+    attendance: AttendanceSelect<false> | AttendanceSelect<true>;
+    'recording-parts': RecordingPartsSelect<false> | RecordingPartsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     folders: FoldersSelect<false> | FoldersSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
@@ -260,11 +268,49 @@ export interface Session {
   id: string;
   title: string;
   class: string | Class;
-  roomName?: string | null;
-  status: 'scheduled' | 'live' | 'ended';
   host?: (string | null) | User;
+  status: 'scheduled' | 'live' | 'ended';
+  roomName?: string | null;
   startedAt?: string | null;
   endedAt?: string | null;
+  /**
+   * People who joined this session, and how long they stayed.
+   */
+  attendance?: {
+    docs?: (string | Attendance)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance".
+ */
+export interface Attendance {
+  id: string;
+  session: string | Session;
+  participant: string | User;
+  name: string;
+  joinedAt: string;
+  leftAt?: string | null;
+  lastSeenAt?: string | null;
+  timeInSession?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recording-parts".
+ */
+export interface RecordingPart {
+  id: string;
+  session: string | Session;
+  part: number;
+  url: string;
+  pathname: string;
+  size: number;
   updatedAt: string;
   createdAt: string;
 }
@@ -311,6 +357,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'sessions';
         value: string | Session;
+      } | null)
+    | ({
+        relationTo: 'attendance';
+        value: string | Attendance;
+      } | null)
+    | ({
+        relationTo: 'recording-parts';
+        value: string | RecordingPart;
       } | null)
     | ({
         relationTo: 'media';
@@ -436,11 +490,40 @@ export interface MaterialsSelect<T extends boolean = true> {
 export interface SessionsSelect<T extends boolean = true> {
   title?: T;
   class?: T;
-  roomName?: T;
-  status?: T;
   host?: T;
+  status?: T;
+  roomName?: T;
   startedAt?: T;
   endedAt?: T;
+  attendance?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance_select".
+ */
+export interface AttendanceSelect<T extends boolean = true> {
+  session?: T;
+  participant?: T;
+  name?: T;
+  joinedAt?: T;
+  leftAt?: T;
+  lastSeenAt?: T;
+  timeInSession?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recording-parts_select".
+ */
+export interface RecordingPartsSelect<T extends boolean = true> {
+  session?: T;
+  part?: T;
+  url?: T;
+  pathname?: T;
+  size?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -547,7 +630,8 @@ export interface CollectionsWidget {
 export interface CollectionQueryWidget {
   data?: {
     title?: string | null;
-    relatedCollection: 'users' | 'classes' | 'enrollments' | 'materials' | 'sessions' | 'media' | 'folders' | 'tags';
+    relatedCollection:
+      'users' | 'classes' | 'enrollments' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags';
     where?:
       | {
           [k: string]: unknown;
@@ -570,7 +654,8 @@ export interface CollectionQueryWidget {
 export interface ActivityWidget {
   data?: {
     excludedCollections?:
-      ('users' | 'classes' | 'enrollments' | 'materials' | 'sessions' | 'media' | 'folders' | 'tags')[] | null;
+      | ('users' | 'classes' | 'enrollments' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags')[]
+      | null;
   };
   width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
 }

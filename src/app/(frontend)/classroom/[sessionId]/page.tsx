@@ -41,6 +41,11 @@ export default async function ClassroomPage({ params }: Args) {
     notFound()
   }
 
+  const blobPrefix = process.env.DB_NAME
+  if (!blobPrefix) {
+    throw new Error('DB_NAME is required.')
+  }
+
   const classTitle =
     session.class && typeof session.class === 'object' && 'title' in session.class
       ? String(session.class.title)
@@ -48,6 +53,7 @@ export default async function ClassroomPage({ params }: Args) {
 
   return (
     <Classroom
+      blobPrefix={blobPrefix}
       canEnd={isAdmin(user) || isTeacher(user)}
       classTitle={classTitle}
       participantIdentity={String(user.id)}

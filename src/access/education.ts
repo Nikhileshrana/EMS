@@ -161,6 +161,25 @@ export const readStudyFiles: Access = async ({ req }) => {
   return { id: { in: mediaIDs } }
 }
 
+export const readAttendance: Access = async ({ req }) => {
+  const classIDs = await memberClassIDs(req)
+  if (classIDs === true) return true
+  if (classIDs === false || classIDs.length === 0) return false
+
+  const sessions = await req.payload.find({
+    collection: 'sessions',
+    depth: 0,
+    limit: 1000,
+    overrideAccess: true,
+    pagination: false,
+    where: { class: { in: classIDs } },
+  })
+
+  const sessionIDs = sessions.docs.map((doc) => String(doc.id))
+  if (sessionIDs.length === 0) return false
+  return { session: { in: sessionIDs } }
+}
+
 export async function userCanJoinClass(
   req: PayloadRequest,
   classID: string,

@@ -17,7 +17,36 @@ export const Sessions: CollectionConfig = {
     group: 'Education',
     defaultColumns: ['title', 'class', 'status', 'updatedAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
+    components: {
+      edit: {
+        SaveButton: '@/components/admin/GoLiveButton#GoLiveButton',
+      },
+      views: {
+        edit: {
+          api: {
+            tab: {
+              condition: ({ req }) => isAdmin(req.user),
+            },
+          },
+          versions: {
+            tab: {
+              condition: ({ req }) => isAdmin(req.user),
+            },
+          },
+          recording: {
+            path: '/recording',
+            Component: '@/components/admin/SessionRecordingView#SessionRecordingView',
+            tab: {
+              label: 'Recording',
+              href: '/recording',
+              order: 100,
+            },
+          },
+        },
+      },
+    },
   },
+  versions: false,
   access: {
     admin: educationPanel,
     create: createClass,
@@ -75,10 +104,9 @@ export const Sessions: CollectionConfig = {
       index: true,
     },
     {
-      name: 'roomName',
-      type: 'text',
-      unique: true,
-      index: true,
+      name: 'host',
+      type: 'relationship',
+      relationTo: 'users',
       admin: {
         readOnly: true,
         position: 'sidebar',
@@ -95,13 +123,15 @@ export const Sessions: CollectionConfig = {
         { label: 'Ended', value: 'ended' },
       ],
       admin: {
+        readOnly: true,
         position: 'sidebar',
       },
     },
     {
-      name: 'host',
-      type: 'relationship',
-      relationTo: 'users',
+      name: 'roomName',
+      type: 'text',
+      unique: true,
+      index: true,
       admin: {
         readOnly: true,
         position: 'sidebar',
@@ -124,9 +154,22 @@ export const Sessions: CollectionConfig = {
       },
     },
     {
+      name: 'attendance',
+      type: 'join',
+      collection: 'attendance',
+      on: 'session',
+      admin: {
+        allowCreate: false,
+        defaultColumns: ['name', 'timeInSession', 'joinedAt', 'leftAt'],
+        description: 'People who joined this session, and how long they stayed.',
+      },
+    },
+    {
       name: 'joinClassroom',
       type: 'ui',
+      label: 'Classroom',
       admin: {
+        condition: (data) => Boolean(data?.id),
         components: {
           Field: '@/components/admin/JoinClassroomLink#JoinClassroomLink',
         },
