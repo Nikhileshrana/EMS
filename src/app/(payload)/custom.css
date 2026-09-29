@@ -1,0 +1,86 @@
+/* Teachers/students on phone: hide left nav + hamburger; show bottom tabs. */
+
+html.ems-bottom-nav .ems-bottom-tabs {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  html.ems-bottom-nav .nav {
+    display: none !important;
+  }
+
+  html.ems-bottom-nav .sidebar-toggle,
+  html.ems-bottom-nav .app-header__sidebar-toggle {
+    display: none !important;
+  }
+
+  html.ems-bottom-nav .template-default,
+  html.ems-bottom-nav .template-default--nav-open,
+  html.ems-bottom-nav .template-default--nav-hydrated,
+  html.ems-bottom-nav .template-default--nav-hydrated.template-default--nav-open {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  html.ems-bottom-nav .template-default__wrap {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  html.ems-bottom-nav .ems-bottom-tabs {
+    position: fixed;
+    z-index: 100;
+    inset-inline: 0;
+    bottom: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    gap: 0.25rem;
+    min-height: 3.75rem;
+    padding: 0.35rem 0.4rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--color-border, #e5e5e5);
+    background: color-mix(in srgb, var(--color-bg, #fff) 92%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  html.ems-bottom-nav .ems-bottom-tabs__item {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    min-width: 0;
+    padding: 0.35rem 0.25rem;
+    border-radius: 0.65rem;
+    color: var(--color-text-tertiary, #737373);
+    text-decoration: none;
+    font-size: 0.65rem;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  html.ems-bottom-nav .ems-bottom-tabs__item:hover,
+  html.ems-bottom-nav .ems-bottom-tabs__item:focus-visible {
+    color: var(--color-text, #171717);
+    background: var(--color-bg-secondary, #f5f5f5);
+    outline: none;
+  }
+
+  html.ems-bottom-nav .ems-bottom-tabs__item.is-active {
+    color: var(--color-text, #171717);
+    font-weight: 600;
+  }
+
+  html.ems-bottom-nav .ems-bottom-tabs__icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+  }
+
+  html.ems-bottom-nav .ems-bottom-tabs__label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -23,8 +23,8 @@ export const viewport = {
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html className={geist.variable} lang="en">
-      <body className="min-h-dvh font-sans antialiased">
+    <html className={`${geist.variable} dark`} lang="en" style={{ colorScheme: 'dark' }}>
+      <body className="min-h-dvh bg-background font-sans text-foreground antialiased">
         <CapacitorShell />
         {props.children}
       </body>

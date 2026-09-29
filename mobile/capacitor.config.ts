@@ -8,12 +8,8 @@ loadEnv({ path: resolve(process.cwd(), '../.env.local') })
 loadEnv({ path: resolve(process.cwd(), '../.env') })
 
 /**
- * EMS cannot use `output: 'export'` (Payload SSR, API routes, auth, LiveKit).
- * The native shell loads the running Next.js app via `server.url`.
- *
- * Set CAPACITOR_SERVER_URL to your local or deployed origin, e.g.:
- *   CAPACITOR_SERVER_URL=http://192.168.1.10:3000
- *   CAPACITOR_SERVER_URL=https://your-app.vercel.app
+ * EMS cannot static-export (Payload SSR / APIs / LiveKit).
+ * Native shell loads Next via CAPACITOR_SERVER_URL.
  */
 const serverUrl = process.env.CAPACITOR_SERVER_URL?.replace(/\/$/, '')
 
@@ -25,7 +21,18 @@ function hostnameFromUrl(url: string): string | null {
   }
 }
 
-const serverHost = serverUrl ? hostnameFromUrl(serverUrl) : null
+function allowNavigation(url: string): string[] {
+  const host = hostnameFromUrl(url)
+  const hosts = ['localhost', '127.0.0.1']
+  if (!host || hosts.includes(host)) return hosts
+
+  hosts.unshift(host)
+  // subdomain wildcard only for real domains, not IPs
+  if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
+    hosts.splice(1, 0, `*.${host}`)
+  }
+  return hosts
+}
 
 const config: CapacitorConfig = {
   appId: 'com.blucollarz.ems',
@@ -37,9 +44,7 @@ const config: CapacitorConfig = {
       ? {
           url: serverUrl,
           cleartext: serverUrl.startsWith('http://'),
-          allowNavigation: serverHost
-            ? [serverHost, `*.${serverHost}`, 'localhost', '127.0.0.1']
-            : ['localhost', '127.0.0.1'],
+          allowNavigation: allowNavigation(serverUrl),
         }
       : {}),
     androidScheme: 'https',

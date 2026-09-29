@@ -38,8 +38,13 @@ if (!blobToken) {
 export default buildConfig({
   admin: {
     user: Users.slug,
+    theme: 'dark',
     importMap: {
       baseDir: path.resolve(dirname),
+    },
+    components: {
+      Nav: '@/components/admin/EducationNav#EducationNav',
+      providers: ['@/components/admin/CapacitorProvider#CapacitorProvider'],
     },
   },
   collections: [
