@@ -14,6 +14,12 @@ import { Tags } from './collections/Tags'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+const dbName = process.env.DB_NAME
+
+if (!dbName) {
+  throw new Error('DB_NAME is required. Every collection is stored in that database.')
+}
+
 export default buildConfig({
   admin: {
     user: Users.slug,
@@ -29,6 +35,9 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URL || '',
+    connectOptions: {
+      dbName,
+    },
   }),
   sharp,
   localization: {
