@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     classes: Class;
+    'class-teachers': ClassTeacher;
     enrollments: Enrollment;
     materials: Material;
     sessions: Session;
@@ -83,6 +84,10 @@ export interface Config {
     'payload-migrations': PayloadMigration;
   };
   collectionsJoins: {
+    classes: {
+      classTeachers: 'class-teachers';
+      students: 'enrollments';
+    };
     sessions: {
       attendance: 'attendance';
     };
@@ -90,6 +95,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     classes: ClassesSelect<false> | ClassesSelect<true>;
+    'class-teachers': ClassTeachersSelect<false> | ClassTeachersSelect<true>;
     enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     materials: MaterialsSelect<false> | MaterialsSelect<true>;
     sessions: SessionsSelect<false> | SessionsSelect<true>;
@@ -176,8 +182,35 @@ export interface Class {
   title: string;
   slug: string;
   description?: string | null;
-  teachers: (string | User)[];
+  teachers?: (string | User)[] | null;
+  /**
+   * Teachers who can run this class.
+   */
+  classTeachers?: {
+    docs?: (string | ClassTeacher)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  /**
+   * Students enrolled in this class.
+   */
+  students?: {
+    docs?: (string | Enrollment)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   status: 'active' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "class-teachers".
+ */
+export interface ClassTeacher {
+  id: string;
+  class: string | Class;
+  teacher: string | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -201,13 +234,61 @@ export interface Material {
   id: string;
   title: string;
   class: string | Class;
+  /**
+   * Use an existing class recording, or upload a new file.
+   */
+  source: 'file' | 'liveSession';
+  /**
+   * Only ended live sessions that already have a recording are listed. Pick the class first.
+   */
+  session?: (string | null) | Session;
   description?: string | null;
-  file: string | Media;
+  file?: (string | null) | Media;
   /**
    * Students only see published material.
    */
   published?: boolean | null;
   uploadedBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sessions".
+ */
+export interface Session {
+  id: string;
+  title: string;
+  class: string | Class;
+  host?: (string | null) | User;
+  status: 'scheduled' | 'live' | 'ended';
+  roomName?: string | null;
+  startedAt?: string | null;
+  endedAt?: string | null;
+  /**
+   * People who joined this session, and how long they stayed.
+   */
+  attendance?: {
+    docs?: (string | Attendance)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "attendance".
+ */
+export interface Attendance {
+  id: string;
+  session: string | Session;
+  participant: string | User;
+  name: string;
+  joinedAt: string;
+  leftAt?: string | null;
+  lastSeenAt?: string | null;
+  timeInSession?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -262,46 +343,6 @@ export interface Tag {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sessions".
- */
-export interface Session {
-  id: string;
-  title: string;
-  class: string | Class;
-  host?: (string | null) | User;
-  status: 'scheduled' | 'live' | 'ended';
-  roomName?: string | null;
-  startedAt?: string | null;
-  endedAt?: string | null;
-  /**
-   * People who joined this session, and how long they stayed.
-   */
-  attendance?: {
-    docs?: (string | Attendance)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "attendance".
- */
-export interface Attendance {
-  id: string;
-  session: string | Session;
-  participant: string | User;
-  name: string;
-  joinedAt: string;
-  leftAt?: string | null;
-  lastSeenAt?: string | null;
-  timeInSession?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "recording-parts".
  */
 export interface RecordingPart {
@@ -345,6 +386,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'classes';
         value: string | Class;
+      } | null)
+    | ({
+        relationTo: 'class-teachers';
+        value: string | ClassTeacher;
       } | null)
     | ({
         relationTo: 'enrollments';
@@ -454,7 +499,19 @@ export interface ClassesSelect<T extends boolean = true> {
   slug?: T;
   description?: T;
   teachers?: T;
+  classTeachers?: T;
+  students?: T;
   status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "class-teachers_select".
+ */
+export interface ClassTeachersSelect<T extends boolean = true> {
+  class?: T;
+  teacher?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -476,6 +533,8 @@ export interface EnrollmentsSelect<T extends boolean = true> {
 export interface MaterialsSelect<T extends boolean = true> {
   title?: T;
   class?: T;
+  source?: T;
+  session?: T;
   description?: T;
   file?: T;
   published?: T;
@@ -630,8 +689,7 @@ export interface CollectionsWidget {
 export interface CollectionQueryWidget {
   data?: {
     title?: string | null;
-    relatedCollection:
-      'users' | 'classes' | 'enrollments' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags';
+    relatedCollection: 'users' | 'classes' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags';
     where?:
       | {
           [k: string]: unknown;
@@ -654,8 +712,7 @@ export interface CollectionQueryWidget {
 export interface ActivityWidget {
   data?: {
     excludedCollections?:
-      | ('users' | 'classes' | 'enrollments' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags')[]
-      | null;
+      ('users' | 'classes' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags')[] | null;
   };
   width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
 }

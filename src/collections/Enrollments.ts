@@ -2,7 +2,7 @@ import { ValidationError, type CollectionConfig } from 'payload'
 
 import { relationID } from '../access/ids'
 import { createClass, manageClassRecords, readEnrollments } from '../access/education'
-import { educationPanel, hasAnyRole, isAdmin } from '../access/roles'
+import { educationPanel, isAdmin } from '../access/roles'
 
 export const Enrollments: CollectionConfig = {
   slug: 'enrollments',
@@ -14,7 +14,7 @@ export const Enrollments: CollectionConfig = {
     useAsTitle: 'student',
     group: 'Education',
     defaultColumns: ['student', 'class', 'status'],
-    hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
+    hidden: true,
   },
   access: {
     admin: educationPanel,
@@ -104,6 +104,9 @@ export const Enrollments: CollectionConfig = {
       relationTo: 'classes',
       required: true,
       index: true,
+      admin: {
+        hidden: true,
+      },
     },
     {
       name: 'student',
@@ -124,9 +127,6 @@ export const Enrollments: CollectionConfig = {
         { label: 'Active', value: 'active' },
         { label: 'Withdrawn', value: 'withdrawn' },
       ],
-      admin: {
-        position: 'sidebar',
-      },
     },
   ],
 }

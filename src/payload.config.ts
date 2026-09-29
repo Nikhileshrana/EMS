@@ -9,6 +9,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Classes } from './collections/Classes'
+import { ClassTeachers } from './collections/ClassTeachers'
 import { Enrollments } from './collections/Enrollments'
 import { Materials } from './collections/Materials'
 import { Sessions } from './collections/Sessions'
@@ -17,6 +18,8 @@ import { RecordingParts } from './collections/RecordingParts'
 import { Media } from './collections/Media'
 import { Folders } from './collections/Folders'
 import { Tags } from './collections/Tags'
+
+import { relationID } from './access/ids'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -42,6 +45,7 @@ export default buildConfig({
   collections: [
     Users,
     Classes,
+    ClassTeachers,
     Enrollments,
     Materials,
     Sessions,
@@ -51,6 +55,43 @@ export default buildConfig({
     Folders,
     Tags,
   ],
+  onInit: async (payload) => {
+    const classes = await payload.find({
+      collection: 'classes',
+      depth: 0,
+      limit: 1000,
+      overrideAccess: true,
+      pagination: false,
+    })
+
+    for (const classDoc of classes.docs) {
+      const teacherIDs = (classDoc.teachers || [])
+        .map((teacher) => relationID(teacher))
+        .filter((id): id is string => Boolean(id))
+
+      for (const teacherID of teacherIDs) {
+        const existing = await payload.find({
+          collection: 'class-teachers',
+          depth: 0,
+          limit: 1,
+          overrideAccess: true,
+          where: {
+            and: [{ class: { equals: classDoc.id } }, { teacher: { equals: teacherID } }],
+          },
+        })
+        if (existing.totalDocs > 0) continue
+
+        await payload.create({
+          collection: 'class-teachers',
+          data: {
+            class: classDoc.id,
+            teacher: teacherID,
+          },
+          overrideAccess: true,
+        })
+      }
+    }
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
