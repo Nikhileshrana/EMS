@@ -38,7 +38,7 @@ const config: CapacitorConfig = {
   appId: 'com.blucollarz.ems',
   appName: 'EMS',
   webDir: 'www',
-  backgroundColor: '#0a0a0a',
+  backgroundColor: '#ffffff',
   server: {
     ...(serverUrl
       ? {
@@ -53,12 +53,12 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchAutoHide: true,
-      backgroundColor: '#0a0a0a',
+      backgroundColor: '#ffffff',
       showSpinner: false,
     },
     StatusBar: {
-      style: 'DARK',
-      backgroundColor: '#0a0a0a',
+      style: 'LIGHT',
+      backgroundColor: '#ffffff',
     },
     Keyboard: {
       resize: KeyboardResize.Body,

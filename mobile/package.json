@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Capacitor native shell for EMS (loads the Next.js app via CAPACITOR_SERVER_URL)",
   "scripts": {
+    "icons": "node ./scripts/generate-icons.mjs",
     "sync": "cap sync",
     "open:ios": "cap open ios",
     "open:android": "cap open android",

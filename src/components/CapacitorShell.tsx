@@ -6,6 +6,8 @@ import { SplashScreen } from '@capacitor/splash-screen'
 import { StatusBar, Style } from '@capacitor/status-bar'
 import { useEffect } from 'react'
 
+const SHELL_BG = '#ffffff'
+
 /** Native-only bootstrap. No-ops in the browser. */
 export function CapacitorShell() {
   useEffect(() => {
@@ -15,9 +17,10 @@ export function CapacitorShell() {
 
     void (async () => {
       try {
-        await StatusBar.setStyle({ style: Style.Dark })
+        // LIGHT = dark icons (for light backgrounds)
+        await StatusBar.setStyle({ style: Style.Light })
         if (Capacitor.getPlatform() === 'android') {
-          await StatusBar.setBackgroundColor({ color: '#0a0a0a' })
+          await StatusBar.setBackgroundColor({ color: SHELL_BG })
         }
       } catch {
         // unavailable on some simulators

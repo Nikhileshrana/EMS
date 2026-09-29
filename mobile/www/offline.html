@@ -8,9 +8,6 @@
     />
     <title>EMS — Offline</title>
     <style>
-      :root {
-        color-scheme: dark;
-      }
       body {
         margin: 0;
         min-height: 100dvh;
@@ -23,9 +20,14 @@
           -apple-system,
           Segoe UI,
           sans-serif;
-        background: #0a0a0a;
-        color: #f5f5f5;
+        background: #ffffff;
+        color: #171717;
         text-align: center;
+      }
+      img {
+        width: min(72vw, 240px);
+        height: auto;
+        margin-bottom: 1.25rem;
       }
       h1 {
         margin: 0 0 0.5rem;
@@ -33,13 +35,14 @@
       }
       p {
         margin: 0;
-        color: #a3a3a3;
+        color: #737373;
         line-height: 1.5;
       }
     </style>
   </head>
   <body>
     <main>
+      <img src="./logo.jpeg" alt="GISGRAM" />
       <h1>Can't reach EMS</h1>
       <p>Check your network, confirm the server is running, then reopen the app.</p>
     </main>

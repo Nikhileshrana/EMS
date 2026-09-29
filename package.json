@@ -16,6 +16,7 @@
     "test": "bun run test:int && bun run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
+    "cap:icons": "bun run --cwd mobile icons",
     "cap:sync": "bun run --cwd mobile sync",
     "cap:ios": "bun run --cwd mobile open:ios",
     "cap:android": "bun run --cwd mobile open:android",
