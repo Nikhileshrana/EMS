@@ -36,7 +36,7 @@ function allowNavigation(url: string): string[] {
 
 const config: CapacitorConfig = {
   appId: 'com.blucollarz.ems',
-  appName: 'EMS',
+  appName: 'GIS GRAM',
   webDir: 'www',
   backgroundColor: '#ffffff',
   server: {

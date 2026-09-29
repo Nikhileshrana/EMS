@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>EMS</string>
+        <string>GIS GRAM</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -67,11 +67,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>EMS needs camera access for live classroom sessions.</string>
+	<string>GIS GRAM needs camera access for live classroom sessions.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>EMS needs microphone access for live classroom sessions.</string>
+	<string>GIS GRAM needs microphone access for live classroom sessions.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>EMS connects to your local development server during testing.</string>
+	<string>GIS GRAM connects to your local development server during testing.</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
