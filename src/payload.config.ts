@@ -38,12 +38,16 @@ if (!blobToken) {
 export default buildConfig({
   admin: {
     user: Users.slug,
-    theme: 'dark',
+    theme: 'light',
     dateFormat: 'dd/MM/yyyy',
     importMap: {
       baseDir: path.resolve(dirname),
     },
     components: {
+      graphics: {
+        Logo: '@/components/admin/Logo#Logo',
+        Icon: '@/components/admin/Icon#Icon',
+      },
       Nav: '@/components/admin/EducationNav#EducationNav',
       providers: ['@/components/admin/CapacitorProvider#CapacitorProvider'],
     },

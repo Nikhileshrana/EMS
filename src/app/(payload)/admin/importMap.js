@@ -6,6 +6,8 @@ import { NullField as NullField_3817bf644402e67bfe6577f60ef982de } from '@payloa
 import { HierarchyField as HierarchyField_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 import { HierarchyButton as HierarchyButton_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 import { EducationNav as EducationNav_72f6edcec6b8d9344c25d6560594d9bc } from '@/components/admin/EducationNav'
+import { Icon as Icon_534076e2c753ea5d539a54b05f456b1b } from '@/components/admin/Icon'
+import { Logo as Logo_a44df17d0fc3dcd873dae43dc3bf66bd } from '@/components/admin/Logo'
 import { CapacitorProvider as CapacitorProvider_95000eeb6576ec64583fa75e2460c886 } from '@/components/admin/CapacitorProvider'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
 import { FolderIcon as FolderIcon_3817bf644402e67bfe6577f60ef982de } from '@payloadcms/ui'
@@ -28,6 +30,8 @@ export const importMap = {
   "@payloadcms/ui/rsc#HierarchyField": HierarchyField_ab83ff7e88da8d3530831f296ec4756a,
   "@payloadcms/ui/rsc#HierarchyButton": HierarchyButton_ab83ff7e88da8d3530831f296ec4756a,
   "@/components/admin/EducationNav#EducationNav": EducationNav_72f6edcec6b8d9344c25d6560594d9bc,
+  "@/components/admin/Icon#Icon": Icon_534076e2c753ea5d539a54b05f456b1b,
+  "@/components/admin/Logo#Logo": Logo_a44df17d0fc3dcd873dae43dc3bf66bd,
   "@/components/admin/CapacitorProvider#CapacitorProvider": CapacitorProvider_95000eeb6576ec64583fa75e2460c886,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
   "@payloadcms/ui#FolderIcon": FolderIcon_3817bf644402e67bfe6577f60ef982de,
