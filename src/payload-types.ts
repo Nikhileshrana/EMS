@@ -158,6 +158,8 @@ export interface Media {
   alt: string;
   _h_folders?: (string | null) | Folder;
   _h_tags?: (string | Tag)[] | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -309,6 +311,8 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   _h_folders?: T;
   _h_tags?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
