@@ -1,3 +1,5 @@
+import { EducationWelcomeCarousel as EducationWelcomeCarousel_2f4224a4f9787bdcb7589f947a3c35e5 } from '@/components/admin/EducationWelcomeCarousel'
+import { EducationListView as EducationListView_28f2eb787075285a45189616f75e1251 } from '@/components/admin/EducationListView'
 import { MaterialSessionLink as MaterialSessionLink_55e8bf107e38953cfee37306b2a81bb2 } from '@/components/admin/MaterialSessionLink'
 import { JoinClassroomLink as JoinClassroomLink_8346d144f4766be34bc39b662d2591d7 } from '@/components/admin/JoinClassroomLink'
 import { GoLiveButton as GoLiveButton_a77618d23ad3f05345ac7b44d43c2813 } from '@/components/admin/GoLiveButton'
@@ -22,6 +24,8 @@ import { RecentlyViewedCollectionsField as RecentlyViewedCollectionsField_3817bf
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel": EducationWelcomeCarousel_2f4224a4f9787bdcb7589f947a3c35e5,
+  "@/components/admin/EducationListView#EducationListView": EducationListView_28f2eb787075285a45189616f75e1251,
   "@/components/admin/MaterialSessionLink#MaterialSessionLink": MaterialSessionLink_55e8bf107e38953cfee37306b2a81bb2,
   "@/components/admin/JoinClassroomLink#JoinClassroomLink": JoinClassroomLink_8346d144f4766be34bc39b662d2591d7,
   "@/components/admin/GoLiveButton#GoLiveButton": GoLiveButton_a77618d23ad3f05345ac7b44d43c2813,

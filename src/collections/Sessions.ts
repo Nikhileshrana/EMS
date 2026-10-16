@@ -7,6 +7,9 @@ import { relationID } from '../access/ids'
 import { createClass, manageClassRecords, readClassRecords } from '../access/education'
 import { educationPanel, hasAnyRole, isAdmin } from '../access/roles'
 
+const educationWelcomeCarousel = '@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel'
+const educationListView = '@/components/admin/EducationListView#EducationListView'
+
 export const Sessions: CollectionConfig = {
   slug: 'sessions',
   labels: {
@@ -19,10 +22,12 @@ export const Sessions: CollectionConfig = {
     defaultColumns: ['title', 'class', 'status', 'updatedAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
     components: {
+      beforeList: [educationWelcomeCarousel],
       edit: {
         SaveButton: '@/components/admin/GoLiveButton#GoLiveButton',
       },
       views: {
+        list: { Component: educationListView },
         edit: {
           ...adminOnlyApiTab,
           recording: {

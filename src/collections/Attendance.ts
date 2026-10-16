@@ -5,6 +5,9 @@ import { readAttendance } from '../access/education'
 import { adminOnly, educationPanel, hasAnyRole } from '../access/roles'
 import { formatStay, stayFor } from '../lib/attendance'
 
+const educationWelcomeCarousel = '@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel'
+const educationListView = '@/components/admin/EducationListView#EducationListView'
+
 export const Attendance: CollectionConfig = {
   slug: 'attendance',
   labels: {
@@ -17,7 +20,9 @@ export const Attendance: CollectionConfig = {
     defaultColumns: ['name', 'session', 'timeInSession', 'joinedAt', 'leftAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher']),
     components: {
+      beforeList: [educationWelcomeCarousel],
       views: {
+        list: { Component: educationListView },
         edit: adminOnlyApiTab,
       },
     },

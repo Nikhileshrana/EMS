@@ -1,30 +1,43 @@
-/* Teachers/students on phone: hide left nav + hamburger; show bottom tabs. */
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
 
-html.ems-bottom-nav .ems-bottom-tabs {
-  display: none;
+@theme inline {
+  --color-border: var(--ems-border);
+  --color-card: var(--ems-card);
+  --color-card-foreground: var(--ems-card-foreground);
+  --color-foreground: var(--ems-foreground);
+  --color-primary: var(--ems-primary);
+  --color-primary-foreground: var(--ems-primary-foreground);
+  --color-ring: var(--ems-ring);
 }
 
+html[data-ems-role='student'],
+html[data-ems-role='teacher'] {
+  --ems-border: var(--theme-elevation-150, #e2e8f0);
+  --ems-card: var(--theme-elevation-0, #fff);
+  --ems-card-foreground: var(--theme-text, #0f172a);
+  --ems-foreground: var(--theme-text, #0f172a);
+  --ems-primary: var(--theme-text, #0f172a);
+  --ems-primary-foreground: var(--theme-elevation-0, #fff);
+  --ems-ring: var(--theme-elevation-500, #64748b);
+}
+
+/* Teachers/students on phone: hide left nav + hamburger; show bottom tabs. */
+html.ems-bottom-nav .ems-bottom-tabs { display: none; }
+
 @media (max-width: 768px) {
-  html.ems-bottom-nav .nav {
-    display: none !important;
-  }
-
+  html.ems-bottom-nav .nav { display: none !important; }
   html.ems-bottom-nav .sidebar-toggle,
-  html.ems-bottom-nav .app-header__sidebar-toggle {
-    display: none !important;
-  }
-
+  html.ems-bottom-nav .app-header__sidebar-toggle { display: none !important; }
   html.ems-bottom-nav .template-default,
   html.ems-bottom-nav .template-default--nav-open,
   html.ems-bottom-nav .template-default--nav-hydrated,
   html.ems-bottom-nav .template-default--nav-hydrated.template-default--nav-open {
     grid-template-columns: minmax(0, 1fr) !important;
   }
-
   html.ems-bottom-nav .template-default__wrap {
     padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
   }
-
   html.ems-bottom-nav .ems-bottom-tabs {
     position: fixed;
     z-index: 100;
@@ -41,7 +54,6 @@ html.ems-bottom-nav .ems-bottom-tabs {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
-
   html.ems-bottom-nav .ems-bottom-tabs__item {
     flex: 1 1 0;
     display: flex;
@@ -58,90 +70,66 @@ html.ems-bottom-nav .ems-bottom-tabs {
     font-weight: 500;
     line-height: 1.1;
   }
-
   html.ems-bottom-nav .ems-bottom-tabs__item:hover,
   html.ems-bottom-nav .ems-bottom-tabs__item:focus-visible {
     color: var(--color-text, #171717);
     background: var(--color-bg-secondary, #f5f5f5);
     outline: none;
   }
-
   html.ems-bottom-nav .ems-bottom-tabs__item.is-active {
     color: var(--color-text, #171717);
     font-weight: 600;
   }
-
-  html.ems-bottom-nav .ems-bottom-tabs__icon {
-    width: 1.35rem;
-    height: 1.35rem;
-    flex-shrink: 0;
-  }
-
+  html.ems-bottom-nav .ems-bottom-tabs__icon { width: 1.35rem; height: 1.35rem; flex-shrink: 0; }
   html.ems-bottom-nav .ems-bottom-tabs__label {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
-  /* All collection lists: search + Filters / Group by / Columns / Create New stretch full width */
-  .list-controls__search-row {
+  /* Mobile list controls fill their own row and keep filters usable. */
+  html.ems-bottom-nav .list-controls__search-row {
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacer-2, 0.5rem);
   }
-
-  .list-controls__left {
+  html.ems-bottom-nav .list-controls__left {
     width: 100%;
     flex: 1 1 auto;
     min-width: 0;
   }
-
-  .list-controls .search-input,
-  .list-controls .search-bar {
+  html.ems-bottom-nav .list-controls .search-input,
+  html.ems-bottom-nav .list-controls .search-bar {
     width: 100%;
     flex: 1 1 auto;
     min-width: 0;
   }
-
-  .list-controls__spacer {
-    display: none;
-  }
-
-  .list-controls__actions {
+  html.ems-bottom-nav .list-controls__spacer { display: none; }
+  html.ems-bottom-nav .list-controls__actions {
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: stretch;
     gap: var(--spacer-2, 0.5rem);
   }
-
-  .list-controls__actions > * {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
-  .list-controls__actions .btn,
-  .list-controls__toggle-where,
-  .list-controls__toggle-sort,
-  .list-controls__toggle-group-by,
-  .list-controls__create-new {
+  html.ems-bottom-nav .list-controls__actions > * { flex: 1 1 0; min-width: 0; }
+  html.ems-bottom-nav .list-controls__actions .btn,
+  html.ems-bottom-nav .list-controls__toggle-where,
+  html.ems-bottom-nav .list-controls__toggle-sort,
+  html.ems-bottom-nav .list-controls__toggle-group-by,
+  html.ems-bottom-nav .list-controls__create-new {
     width: 100%;
     justify-content: center;
   }
 }
 
-/* Students: join tables are view-only (Payload still paints Add New / edit despite create:false) */
+/* Students: join tables are view-only (Payload still paints Add New / edit despite create:false). */
 html[data-ems-role='student'] .relationship-table__add-new,
 html[data-ems-role='student'] .relationship-table__add-new-polymorphic,
-html[data-ems-role='student'] .drawer-link__doc-drawer-toggler {
-  display: none !important;
-}
+html[data-ems-role='student'] .drawer-link__doc-drawer-toggler { display: none !important; }
 
-/* Students/teachers: never show API / Versions document tabs */
+/* Students/teachers: never show API / Versions document tabs. */
 html[data-ems-role='student'] .doc-tab[href$='/api'],
 html[data-ems-role='student'] .doc-tab[href$='/versions'],
 html[data-ems-role='teacher'] .doc-tab[href$='/api'],
-html[data-ems-role='teacher'] .doc-tab[href$='/versions'] {
-  display: none !important;
-}
+html[data-ems-role='teacher'] .doc-tab[href$='/versions'] { display: none !important; }

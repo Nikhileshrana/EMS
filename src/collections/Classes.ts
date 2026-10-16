@@ -5,6 +5,9 @@ import { relationID } from '../access/ids'
 import { createClass, manageOwnClasses, readClasses } from '../access/education'
 import { educationPanel, hasAnyRole, isAdmin, isTeacher } from '../access/roles'
 
+const educationWelcomeCarousel = '@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel'
+const educationListView = '@/components/admin/EducationListView#EducationListView'
+
 export const Classes: CollectionConfig = {
   slug: 'classes',
   labels: {
@@ -17,7 +20,9 @@ export const Classes: CollectionConfig = {
     defaultColumns: ['title', 'status', 'updatedAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
     components: {
+      beforeList: [educationWelcomeCarousel],
       views: {
+        list: { Component: educationListView },
         edit: adminOnlyApiTab,
       },
     },

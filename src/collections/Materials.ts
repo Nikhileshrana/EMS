@@ -5,6 +5,9 @@ import { relationID } from '../access/ids'
 import { createClass, manageClassRecords, readMaterials } from '../access/education'
 import { educationPanel, hasAnyRole } from '../access/roles'
 
+const educationWelcomeCarousel = '@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel'
+const educationListView = '@/components/admin/EducationListView#EducationListView'
+
 export const Materials: CollectionConfig = {
   slug: 'materials',
   labels: {
@@ -17,7 +20,9 @@ export const Materials: CollectionConfig = {
     defaultColumns: ['title', 'class', 'source', 'published', 'updatedAt'],
     hidden: ({ user }) => !hasAnyRole(user, ['admin', 'teacher', 'student']),
     components: {
+      beforeList: [educationWelcomeCarousel],
       views: {
+        list: { Component: educationListView },
         edit: adminOnlyApiTab,
       },
     },
