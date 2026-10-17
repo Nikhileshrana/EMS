@@ -14,6 +14,8 @@ import { Enrollments } from './collections/Enrollments'
 import { Materials } from './collections/Materials'
 import { Sessions } from './collections/Sessions'
 import { Attendance } from './collections/Attendance'
+import { Tests } from './collections/Tests'
+import { TestAttempts } from './collections/TestAttempts'
 import { RecordingParts } from './collections/RecordingParts'
 import { Media } from './collections/Media'
 import { Folders } from './collections/Folders'
@@ -60,6 +62,8 @@ export default buildConfig({
     Materials,
     Sessions,
     Attendance,
+    Tests,
+    TestAttempts,
     RecordingParts,
     Media,
     Folders,

@@ -74,6 +74,8 @@ export interface Config {
     materials: Material;
     sessions: Session;
     attendance: Attendance;
+    tests: Test;
+    'test-attempts': TestAttempt;
     'recording-parts': RecordingPart;
     media: Media;
     folders: Folder;
@@ -91,6 +93,9 @@ export interface Config {
     sessions: {
       attendance: 'attendance';
     };
+    tests: {
+      attempts: 'test-attempts';
+    };
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
@@ -100,6 +105,8 @@ export interface Config {
     materials: MaterialsSelect<false> | MaterialsSelect<true>;
     sessions: SessionsSelect<false> | SessionsSelect<true>;
     attendance: AttendanceSelect<false> | AttendanceSelect<true>;
+    tests: TestsSelect<false> | TestsSelect<true>;
+    'test-attempts': TestAttemptsSelect<false> | TestAttemptsSelect<true>;
     'recording-parts': RecordingPartsSelect<false> | RecordingPartsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     folders: FoldersSelect<false> | FoldersSelect<true>;
@@ -343,6 +350,146 @@ export interface Tag {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tests".
+ */
+export interface Test {
+  id: string;
+  title: string;
+  /**
+   * Students enrolled in this class will see the test once it is open.
+   */
+  class: string | Class;
+  /**
+   * Shown to students before they start the test. Optional.
+   */
+  description?: string | null;
+  questions: (SingleChoice | MultipleChoice | TrueFalse | ShortAnswer)[];
+  /**
+   * Minutes students get. Leave 0 for no time limit.
+   */
+  durationMinutes?: number | null;
+  /**
+   * Students only see open tests.
+   */
+  status: 'draft' | 'open' | 'closed';
+  /**
+   * Answers submitted by students.
+   */
+  attempts?: {
+    docs?: (string | TestAttempt)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  createdBy?: (string | null) | User;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SingleChoice".
+ */
+export interface SingleChoice {
+  question: string;
+  /**
+   * Shown under the question. Optional.
+   */
+  description?: string | null;
+  option1: string;
+  option2: string;
+  option3: string;
+  option4: string;
+  /**
+   * The option students must pick to score this question.
+   */
+  correctAnswer: 'option1' | 'option2' | 'option3' | 'option4';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'singleChoice';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MultipleChoice".
+ */
+export interface MultipleChoice {
+  question: string;
+  /**
+   * Students can pick every option that applies.
+   */
+  description?: string | null;
+  option1: string;
+  option2: string;
+  option3: string;
+  option4: string;
+  option5: string;
+  /**
+   * Students must pick exactly these options to score this question.
+   */
+  correctAnswers: ('option1' | 'option2' | 'option3' | 'option4' | 'option5')[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'multipleChoice';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TrueFalse".
+ */
+export interface TrueFalse {
+  question: string;
+  correctAnswer: 'true' | 'false';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'trueFalse';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ShortAnswer".
+ */
+export interface ShortAnswer {
+  question: string;
+  /**
+   * Matching ignores letter case and extra spaces.
+   */
+  correctAnswer: string;
+  /**
+   * Alternative answers that are also correct. Optional.
+   */
+  acceptedAnswers?: string[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'shortAnswer';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "test-attempts".
+ */
+export interface TestAttempt {
+  id: string;
+  test: string | Test;
+  class: string | Class;
+  student: string | User;
+  status: 'inProgress' | 'submitted';
+  answers?:
+    | {
+        questionId: string;
+        questionType: string;
+        question?: string | null;
+        answer?: string[] | null;
+        isCorrect?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Correct answers out of the total questions.
+   */
+  score?: number | null;
+  totalQuestions?: number | null;
+  startedAt?: string | null;
+  submittedAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "recording-parts".
  */
 export interface RecordingPart {
@@ -406,6 +553,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'attendance';
         value: string | Attendance;
+      } | null)
+    | ({
+        relationTo: 'tests';
+        value: string | Test;
+      } | null)
+    | ({
+        relationTo: 'test-attempts';
+        value: string | TestAttempt;
       } | null)
     | ({
         relationTo: 'recording-parts';
@@ -575,6 +730,95 @@ export interface AttendanceSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tests_select".
+ */
+export interface TestsSelect<T extends boolean = true> {
+  title?: T;
+  class?: T;
+  description?: T;
+  questions?:
+    | T
+    | {
+        singleChoice?:
+          | T
+          | {
+              question?: T;
+              description?: T;
+              option1?: T;
+              option2?: T;
+              option3?: T;
+              option4?: T;
+              correctAnswer?: T;
+              id?: T;
+              blockName?: T;
+            };
+        multipleChoice?:
+          | T
+          | {
+              question?: T;
+              description?: T;
+              option1?: T;
+              option2?: T;
+              option3?: T;
+              option4?: T;
+              option5?: T;
+              correctAnswers?: T;
+              id?: T;
+              blockName?: T;
+            };
+        trueFalse?:
+          | T
+          | {
+              question?: T;
+              correctAnswer?: T;
+              id?: T;
+              blockName?: T;
+            };
+        shortAnswer?:
+          | T
+          | {
+              question?: T;
+              correctAnswer?: T;
+              acceptedAnswers?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  durationMinutes?: T;
+  status?: T;
+  attempts?: T;
+  createdBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "test-attempts_select".
+ */
+export interface TestAttemptsSelect<T extends boolean = true> {
+  test?: T;
+  class?: T;
+  student?: T;
+  status?: T;
+  answers?:
+    | T
+    | {
+        questionId?: T;
+        questionType?: T;
+        question?: T;
+        answer?: T;
+        isCorrect?: T;
+        id?: T;
+      };
+  score?: T;
+  totalQuestions?: T;
+  startedAt?: T;
+  submittedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "recording-parts_select".
  */
 export interface RecordingPartsSelect<T extends boolean = true> {
@@ -689,7 +933,17 @@ export interface CollectionsWidget {
 export interface CollectionQueryWidget {
   data?: {
     title?: string | null;
-    relatedCollection: 'users' | 'classes' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags';
+    relatedCollection:
+      | 'users'
+      | 'classes'
+      | 'materials'
+      | 'sessions'
+      | 'attendance'
+      | 'tests'
+      | 'test-attempts'
+      | 'media'
+      | 'folders'
+      | 'tags';
     where?:
       | {
           [k: string]: unknown;
@@ -712,7 +966,19 @@ export interface CollectionQueryWidget {
 export interface ActivityWidget {
   data?: {
     excludedCollections?:
-      ('users' | 'classes' | 'materials' | 'sessions' | 'attendance' | 'media' | 'folders' | 'tags')[] | null;
+      | (
+          | 'users'
+          | 'classes'
+          | 'materials'
+          | 'sessions'
+          | 'attendance'
+          | 'tests'
+          | 'test-attempts'
+          | 'media'
+          | 'folders'
+          | 'tags'
+        )[]
+      | null;
   };
   width: 'x-small' | 'small' | 'medium' | 'large' | 'x-large' | 'full';
 }

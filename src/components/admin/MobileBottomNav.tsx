@@ -5,6 +5,7 @@ import { useAuth, useNav } from '@payloadcms/ui'
 import {
   BookOpen,
   ClipboardCheck,
+  ClipboardList,
   FileText,
   UserRound,
   Video,
@@ -40,6 +41,12 @@ const sharedTabs: Tab[] = [
     icon: Video,
     label: 'Sessions',
     match: (path) => path.includes('/collections/sessions'),
+  },
+  {
+    href: '/admin/collections/tests',
+    icon: ClipboardList,
+    label: 'Tests',
+    match: (path) => path.includes('/collections/tests') || path.startsWith('/test/'),
   },
 ]
 

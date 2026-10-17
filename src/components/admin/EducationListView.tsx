@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { DefaultListView, useAuth, useListQuery } from '@payloadcms/ui'
-import { ArrowRight, BookOpen, ClipboardCheck, FileText, Video } from 'lucide-react'
+import { ArrowRight, BookOpen, ClipboardCheck, ClipboardList, FileText, Video } from 'lucide-react'
 import type { ListViewClientProps } from 'payload'
 import Link from 'next/link'
 import React from 'react'
@@ -24,6 +24,7 @@ const collectionDetails: Record<string, CollectionDetails> = {
   materials: { icon: FileText, titleField: 'title', titleFallback: 'Study material', metadataFields: ['class', 'source'] },
   sessions: { icon: Video, titleField: 'title', titleFallback: 'Live session', metadataFields: ['class', 'status'] },
   attendance: { icon: ClipboardCheck, titleField: 'name', titleFallback: 'Participant', metadataFields: ['session', 'timeInSession'] },
+  tests: { icon: ClipboardList, titleField: 'title', titleFallback: 'Test', metadataFields: ['class', 'status'] },
 }
 
 function displayValue(value: unknown): string | undefined {

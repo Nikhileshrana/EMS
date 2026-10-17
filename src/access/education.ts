@@ -161,6 +161,53 @@ export const readStudyFiles: Access = async ({ req }) => {
   return { id: { in: mediaIDs } }
 }
 
+export const readTests: Access = async ({ req }) => {
+  const user = req.user
+  if (!user) return false
+  if (isAdmin(user)) return true
+
+  const constraints: Where[] = []
+
+  if (isTeacher(user)) {
+    const ids = await taughtClassIDs(req, String(user.id))
+    if (ids.length > 0) constraints.push({ class: { in: ids } })
+  }
+
+  if (user.roles?.includes('student')) {
+    const ids = await enrolledClassIDs(req, String(user.id))
+    if (ids.length > 0) {
+      constraints.push({
+        and: [{ class: { in: ids } }, { status: { equals: 'open' } }],
+      })
+    }
+  }
+
+  if (constraints.length === 0) return false
+  if (constraints.length === 1) return constraints[0]
+  return { or: constraints }
+}
+
+export const readTestAttempts: Access = async ({ req }) => {
+  const user = req.user
+  if (!user) return false
+  if (isAdmin(user)) return true
+
+  const constraints: Where[] = []
+
+  if (isTeacher(user)) {
+    const ids = await taughtClassIDs(req, String(user.id))
+    if (ids.length > 0) constraints.push({ class: { in: ids } })
+  }
+
+  if (user.roles?.includes('student')) {
+    constraints.push({ student: { equals: user.id } })
+  }
+
+  if (constraints.length === 0) return false
+  if (constraints.length === 1) return constraints[0]
+  return { or: constraints }
+}
+
 export const readAttendance: Access = async ({ req }) => {
   const classIDs = await memberClassIDs(req)
   if (classIDs === true) return true

@@ -38,6 +38,13 @@ const studentSlides: Slide[] = [
     href: '/admin/collections/sessions',
     action: 'View sessions',
   },
+  {
+    title: 'Show what you know',
+    description: 'Take the tests your teachers open for your class.',
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1600&q=90',
+    href: '/admin/collections/tests',
+    action: 'View tests',
+  },
 ]
 
 const teacherSlides: Slide[] = [
@@ -61,6 +68,13 @@ const teacherSlides: Slide[] = [
     image: 'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1600&q=90',
     href: '/admin/collections/sessions',
     action: 'Open sessions',
+  },
+  {
+    title: 'Check understanding in minutes',
+    description: 'Build a test, pick your class, and open it when everyone is ready.',
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1600&q=90',
+    href: '/admin/collections/tests',
+    action: 'Manage tests',
   },
 ]
 
