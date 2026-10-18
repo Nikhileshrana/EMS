@@ -128,6 +128,11 @@ html[data-ems-role='student'] .relationship-table__add-new,
 html[data-ems-role='student'] .relationship-table__add-new-polymorphic,
 html[data-ems-role='student'] .drawer-link__doc-drawer-toggler { display: none !important; }
 
+/* Teachers: they manage students but not staff — hide join-table chrome on the Teachers join. */
+html[data-ems-role='teacher'] #field-classTeachers .relationship-table__add-new,
+html[data-ems-role='teacher'] #field-classTeachers .relationship-table__add-new-polymorphic,
+html[data-ems-role='teacher'] #field-classTeachers .drawer-link__doc-drawer-toggler { display: none !important; }
+
 /* Students/teachers: never show API / Versions document tabs. */
 html[data-ems-role='student'] .doc-tab[href$='/api'],
 html[data-ems-role='student'] .doc-tab[href$='/versions'],
