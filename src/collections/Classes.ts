@@ -122,7 +122,7 @@ export const Classes: CollectionConfig = {
       admin: {
         allowCreate: true,
         defaultColumns: ['teacher', 'updatedAt'],
-        description: 'Teachers who can run this class.',
+        description: 'Teachers who can run this class. Save the class first to add teachers.',
         disableRowTypes: true,
       },
     },
@@ -135,8 +135,18 @@ export const Classes: CollectionConfig = {
       admin: {
         allowCreate: true,
         defaultColumns: ['student', 'status', 'updatedAt'],
-        description: 'Students enrolled in this class.',
+        description: 'Students enrolled in this class. Save the class first to add students.',
         disableRowTypes: true,
+      },
+    },
+    {
+      name: 'rosterSaveHint',
+      type: 'ui',
+      admin: {
+        condition: (data) => !data?.id,
+        components: {
+          Field: '@/components/admin/RosterSaveHint#RosterSaveHint',
+        },
       },
     },
     {

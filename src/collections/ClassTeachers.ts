@@ -154,11 +154,19 @@ async function syncClassTeachersArray(
     .map((row) => relationID(row.teacher))
     .filter((id): id is string => Boolean(id))
 
-  await req.payload.update({
-    collection: 'classes',
-    id: classID,
-    data: { teachers: teacherIDs },
-    overrideAccess: true,
-    context: { syncTeachers: true },
-  })
+  try {
+    await req.payload.update({
+      collection: 'classes',
+      id: classID,
+      data: { teachers: teacherIDs },
+      overrideAccess: true,
+      context: { syncTeachers: true },
+    })
+  } catch (error) {
+    // The class row can lag a beat behind the join write (e.g. on serverless DBs).
+    // Teachers are looked up from class-teachers at read time anyway, so don't fail the request.
+    req.payload.logger?.warn(
+      `class-teachers sync skipped for class ${classID}: ${error instanceof Error ? error.message : error}`,
+    )
+  }
 }

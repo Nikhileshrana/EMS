@@ -191,7 +191,7 @@ export interface Class {
   description?: string | null;
   teachers?: (string | User)[] | null;
   /**
-   * Teachers who can run this class.
+   * Teachers who can run this class. Save the class first to add teachers.
    */
   classTeachers?: {
     docs?: (string | ClassTeacher)[];
@@ -199,7 +199,7 @@ export interface Class {
     totalDocs?: number;
   };
   /**
-   * Students enrolled in this class.
+   * Students enrolled in this class. Save the class first to add students.
    */
   students?: {
     docs?: (string | Enrollment)[];

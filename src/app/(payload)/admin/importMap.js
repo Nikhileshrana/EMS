@@ -1,3 +1,4 @@
+import { RosterSaveHint as RosterSaveHint_b244d94a21310faa3cb22873da67dd88 } from '@/components/admin/RosterSaveHint'
 import { EducationWelcomeCarousel as EducationWelcomeCarousel_2f4224a4f9787bdcb7589f947a3c35e5 } from '@/components/admin/EducationWelcomeCarousel'
 import { EducationListView as EducationListView_28f2eb787075285a45189616f75e1251 } from '@/components/admin/EducationListView'
 import { MaterialSessionLink as MaterialSessionLink_55e8bf107e38953cfee37306b2a81bb2 } from '@/components/admin/MaterialSessionLink'
@@ -25,6 +26,7 @@ import { RecentlyViewedCollectionsField as RecentlyViewedCollectionsField_3817bf
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/components/admin/RosterSaveHint#RosterSaveHint": RosterSaveHint_b244d94a21310faa3cb22873da67dd88,
   "@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel": EducationWelcomeCarousel_2f4224a4f9787bdcb7589f947a3c35e5,
   "@/components/admin/EducationListView#EducationListView": EducationListView_28f2eb787075285a45189616f75e1251,
   "@/components/admin/MaterialSessionLink#MaterialSessionLink": MaterialSessionLink_55e8bf107e38953cfee37306b2a81bb2,
