@@ -22,19 +22,38 @@ export async function enrolledClassIDs(req: PayloadRequest, userID: string): Pro
     .filter((id): id is string => Boolean(id))
 }
 
-async function taughtClassIDs(req: PayloadRequest, userID: string): Promise<string[]> {
-  const classes = await req.payload.find({
-    collection: 'classes',
-    depth: 0,
-    limit: 1000,
-    overrideAccess: true,
-    pagination: false,
-    where: {
-      teachers: { contains: userID },
-    },
-  })
+/**
+ * Classes a teacher can run. `class-teachers` is the source of truth — the admin UI
+ * writes there via the join field, and the legacy `classes.teachers` array lags behind.
+ */
+export async function taughtClassIDs(req: PayloadRequest, userID: string): Promise<string[]> {
+  const [rows, legacy] = await Promise.all([
+    req.payload.find({
+      collection: 'class-teachers',
+      depth: 0,
+      limit: 1000,
+      overrideAccess: true,
+      pagination: false,
+      where: { teacher: { equals: userID } },
+    }),
+    req.payload.find({
+      collection: 'classes',
+      depth: 0,
+      limit: 1000,
+      overrideAccess: true,
+      pagination: false,
+      where: { teachers: { contains: userID } },
+    }),
+  ])
 
-  return classes.docs.map((doc) => String(doc.id))
+  const ids = new Set<string>()
+  for (const row of rows.docs) {
+    const id = relationID(row.class)
+    if (id) ids.add(id)
+  }
+  for (const doc of legacy.docs) ids.add(String(doc.id))
+
+  return [...ids]
 }
 
 export async function memberClassIDs(req: PayloadRequest): Promise<string[] | true | false> {
@@ -61,15 +80,28 @@ function classConstraint(ids: string[] | true | false, field: 'id' | 'class'): b
   return { [field]: { in: ids } }
 }
 
+/** Admins, or teachers who run this class. Use in collection validation hooks. */
+export async function canManageClass(req: PayloadRequest, classID: string | null): Promise<boolean> {
+  const user = req.user
+  if (!user || !classID) return false
+  if (isAdmin(user)) return true
+  if (!isTeacher(user)) return false
+  return (await taughtClassIDs(req, String(user.id))).includes(classID)
+}
+
 export const createClass: Access = ({ req: { user } }) => isAdmin(user) || isTeacher(user)
 
 export const readClasses: Access = async ({ req }) => classConstraint(await memberClassIDs(req), 'id')
 
-export const manageOwnClasses: Access = ({ req: { user } }) => {
+export const manageOwnClasses: Access = async ({ req }) => {
+  const user = req.user
   if (!user) return false
   if (isAdmin(user)) return true
-  if (isTeacher(user)) return { teachers: { contains: user.id } }
-  return false
+  if (!isTeacher(user)) return false
+
+  const ids = await taughtClassIDs(req, String(user.id))
+  if (ids.length === 0) return false
+  return { id: { in: ids } }
 }
 
 export const readClassRecords: Access = async ({ req }) =>

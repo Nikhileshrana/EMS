@@ -2,8 +2,8 @@ import { ValidationError, type Block, type CollectionConfig } from 'payload'
 
 import { adminOnlyApiTab } from '../access/adminViews'
 import { relationID } from '../access/ids'
-import { createClass, manageClassRecords, readTests } from '../access/education'
-import { educationPanel, hasAnyRole, isAdmin } from '../access/roles'
+import { canManageClass, createClass, manageClassRecords, readTests } from '../access/education'
+import { educationPanel, hasAnyRole } from '../access/roles'
 
 const educationWelcomeCarousel = '@/components/admin/EducationWelcomeCarousel#EducationWelcomeCarousel'
 const educationListView = '@/components/admin/EducationListView#EducationListView'
@@ -143,16 +143,8 @@ export const Tests: CollectionConfig = {
         if (!data) return data
 
         const classID = relationID(data?.class ?? originalDoc?.class)
-        if (!classID || isAdmin(req.user) || !req.user) return data
-
-        const classDoc = await req.payload.findByID({
-          collection: 'classes',
-          id: classID,
-          depth: 0,
-          overrideAccess: true,
-        })
-        const teacherIDs = (classDoc.teachers || []).map((teacher) => relationID(teacher))
-        if (!teacherIDs.includes(String(req.user.id))) {
+        // No class yet: let the `required` validation on `class` report that instead.
+        if (classID && !(await canManageClass(req, classID))) {
           throw new ValidationError({
             errors: [
               {

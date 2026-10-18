@@ -1,6 +1,6 @@
 import type { Payload, PayloadRequest } from 'payload'
 
-import { enrolledClassIDs } from '@/access/education'
+import { canManageClass, enrolledClassIDs } from '@/access/education'
 import { relationID } from '@/access/ids'
 import { isAdmin, isTeacher } from '@/access/roles'
 
@@ -121,15 +121,9 @@ export async function testAccessFor(
   if (isAdmin(user)) return { kind: 'staff', attempt: null }
 
   if (isTeacher(user)) {
-    if (!classID) return { kind: 'staff', attempt: null }
-    const classDoc = await payload
-      .findByID({ collection: 'classes', id: classID, depth: 0, overrideAccess: true })
-      .catch(() => null)
-    const teacherIDs = (classDoc?.teachers || [])
-      .map((teacher) => relationID(teacher))
-      .filter(Boolean)
-    if (teacherIDs.includes(String(user.id))) return { kind: 'staff', attempt: null }
-    return { kind: 'denied' }
+    return (await canManageClass(req, classID))
+      ? { kind: 'staff', attempt: null }
+      : { kind: 'denied' }
   }
 
   if (!user.roles?.includes('student')) return { kind: 'denied' }

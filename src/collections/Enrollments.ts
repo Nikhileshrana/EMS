@@ -2,8 +2,8 @@ import { ValidationError, type CollectionConfig } from 'payload'
 
 import { adminOnlyApiTab } from '../access/adminViews'
 import { relationID } from '../access/ids'
-import { createClass, manageClassRecords, readEnrollments } from '../access/education'
-import { educationPanel, isAdmin } from '../access/roles'
+import { canManageClass, createClass, manageClassRecords, readEnrollments } from '../access/education'
+import { educationPanel } from '../access/roles'
 
 export const Enrollments: CollectionConfig = {
   slug: 'enrollments',
@@ -55,24 +55,15 @@ export const Enrollments: CollectionConfig = {
           })
         }
 
-        if (!isAdmin(req.user)) {
-          const classDoc = await req.payload.findByID({
-            collection: 'classes',
-            id: classID,
-            depth: 0,
-            overrideAccess: true,
+        if (!(await canManageClass(req, classID))) {
+          throw new ValidationError({
+            errors: [
+              {
+                message: 'You can only add students to a class you teach.',
+                path: 'class',
+              },
+            ],
           })
-          const teacherIDs = (classDoc.teachers || []).map((teacher) => relationID(teacher))
-          if (!req.user || !teacherIDs.includes(String(req.user.id))) {
-            throw new ValidationError({
-              errors: [
-                {
-                  message: 'You can only add students to a class you teach.',
-                  path: 'class',
-                },
-              ],
-            })
-          }
         }
 
         const duplicate = await req.payload.find({
