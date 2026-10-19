@@ -4,7 +4,6 @@ import { isAdmin, isStudent, isTeacher } from '@/access/roles'
 import { useAuth, useNav } from '@payloadcms/ui'
 import {
   BookOpen,
-  ClipboardCheck,
   ClipboardList,
   FileText,
   UserRound,
@@ -50,13 +49,6 @@ const sharedTabs: Tab[] = [
   },
 ]
 
-const attendanceTab: Tab = {
-  href: '/admin/collections/attendance',
-  icon: ClipboardCheck,
-  label: 'Attendance',
-  match: (path) => path.includes('/collections/attendance'),
-}
-
 const accountTab: Tab = {
   href: '/admin/account',
   icon: UserRound,
@@ -65,7 +57,6 @@ const accountTab: Tab = {
 }
 
 function tabsFor(user: { roles?: string[] | null } | null | undefined): Tab[] {
-  if (isTeacher(user)) return [...sharedTabs, attendanceTab, accountTab]
   return [...sharedTabs, accountTab]
 }
 

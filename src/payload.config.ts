@@ -69,41 +69,50 @@ export default buildConfig({
     Folders,
     Tags,
   ],
+  // Backfills class-teachers rows from the legacy classes.teachers array.
+  // Must never throw: onInit runs on every boot, and a failure here also fails `payload build`.
   onInit: async (payload) => {
-    const classes = await payload.find({
-      collection: 'classes',
-      depth: 0,
-      limit: 1000,
-      overrideAccess: true,
-      pagination: false,
-    })
+    try {
+      const classes = await payload.find({
+        collection: 'classes',
+        depth: 0,
+        limit: 1000,
+        overrideAccess: true,
+        pagination: false,
+      })
 
-    for (const classDoc of classes.docs) {
-      const teacherIDs = (classDoc.teachers || [])
-        .map((teacher) => relationID(teacher))
-        .filter((id): id is string => Boolean(id))
+      for (const classDoc of classes.docs) {
+        const teacherIDs = (classDoc.teachers || [])
+          .map((teacher) => relationID(teacher))
+          .filter((id): id is string => Boolean(id))
 
-      for (const teacherID of teacherIDs) {
-        const existing = await payload.find({
-          collection: 'class-teachers',
-          depth: 0,
-          limit: 1,
-          overrideAccess: true,
-          where: {
-            and: [{ class: { equals: classDoc.id } }, { teacher: { equals: teacherID } }],
-          },
-        })
-        if (existing.totalDocs > 0) continue
+        for (const teacherID of teacherIDs) {
+          const existing = await payload.find({
+            collection: 'class-teachers',
+            depth: 0,
+            limit: 1,
+            overrideAccess: true,
+            where: {
+              and: [{ class: { equals: classDoc.id } }, { teacher: { equals: teacherID } }],
+            },
+          })
+          if (existing.totalDocs > 0) continue
 
-        await payload.create({
-          collection: 'class-teachers',
-          data: {
-            class: classDoc.id,
-            teacher: teacherID,
-          },
-          overrideAccess: true,
-        })
+          await payload.create({
+            collection: 'class-teachers',
+            data: {
+              class: classDoc.id,
+              teacher: teacherID,
+            },
+            overrideAccess: true,
+          })
+        }
       }
+    } catch (error) {
+      payload.logger.error({
+        err: error,
+        msg: 'class-teachers backfill skipped — booting anyway',
+      })
     }
   },
   editor: lexicalEditor(),
